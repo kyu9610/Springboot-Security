@@ -9,18 +9,35 @@ package com.cos.securiy1.auth;
 // Security Session => Authentication => UserDetails(PrincipalDetails)
 
 import com.cos.securiy1.model.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
-public class PrincipalDetails implements UserDetails {
+@Data
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private User user; // 컴포지션
+    private Map<String,Object> attributes;
 
+    // 일반 로그인 생성자
     public PrincipalDetails(User user){
         this.user = user;
+    }
+
+    // OAuth 로그인 생성자
+    public PrincipalDetails(User user,Map<String,Object> attributes){
+        this.user = user;
+        this.attributes = attributes;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     // 해당 User의 권한을 리턴하는곳.
@@ -69,5 +86,10 @@ public class PrincipalDetails implements UserDetails {
         // 사이트 내에서 1년동안 로그인을 안하면 휴먼계정을 전환을 하도록 하겠다.
         // -> loginDate 타입을 모아놨다가 이 값을 false로 return 해버리면 된다.
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }

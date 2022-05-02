@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 // Security 설정에서 loginProcessUrl("/login")으로 걸어뒀기 때문에 /login 요청이오면 자동으로 타입이 IoC 되어있는
 // loadUserByUsername 함수가 수행 => "약속"
+// 함수 종료시 @AuthenticationPrncipal 어노테이션이 만들어진다.
 @Service
 public class PrincipalDetailsService implements UserDetailsService {
 
