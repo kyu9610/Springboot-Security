@@ -3,16 +3,18 @@ package com.cos.securiy1.oauth;
 import com.cos.securiy1.auth.PrincipalDetails;
 import com.cos.securiy1.auth.provider.FacebookUserInfo;
 import com.cos.securiy1.auth.provider.GoogleUserInfo;
+import com.cos.securiy1.auth.provider.NaverUserInfo;
 import com.cos.securiy1.auth.provider.OAuth2UserInfo;
 import com.cos.securiy1.model.User;
 import com.cos.securiy1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 // 함수 종료시 @AuthenticationPrncipal 어노테이션이 만들어진다.
 @Service
@@ -34,9 +36,12 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         if(userRequest.getClientRegistration().getRegistrationId().equals("google")){
             System.out.println("구글 로그인 요청");
             oAuth2UserInfo = new GoogleUserInfo(oauth2User.getAttributes());
-        }else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")){
+        }else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")) {
             System.out.println("페이스북 로그인 요청");
             oAuth2UserInfo = new FacebookUserInfo(oauth2User.getAttributes());
+        }else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")){
+            System.out.println("네이버 로그인 요청");
+            oAuth2UserInfo = new NaverUserInfo((Map)oauth2User.getAttributes().get("response"));
         }else{
             System.out.println("구글, 페이스북 로그인만 지원합니다.");
         }
