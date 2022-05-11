@@ -30,3 +30,8 @@ spring:
             client-id: 1012406169498-q0t1e03b5cg10qupgqig61l5m4klt9vd.apps.googleusercontent.com
             client-secret: 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
             scope: profile,email
+
+          facebook:
+            client-id: 408500807744294
+            client-secret: 9698bde0b02aed098ed17ff51ad78fd9
+            scope: public_profile,email
