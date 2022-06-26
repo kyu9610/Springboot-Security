@@ -1,5 +1,6 @@
 package com.cos.securiy1.config;
 
+import com.cos.securiy1.filter.MyFilter1;
 import com.cos.securiy1.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
@@ -36,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                     .addFilter(corsFilter) // @CrossOrigin(인증x), 시큐리티 필터에 등록을 해야 인증있을때 사용
                     .formLogin().disable()
-                    .httpBasic().disable()
+                    .httpBasic().disable() // ID + PWD 를 들고가는 방식인 httpBasic이 아닌 Token을 들고가는 Bearer 방식을 사용하기위해
                     .authorizeRequests()
                     .antMatchers("/api/v1/user/**")
                     .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
