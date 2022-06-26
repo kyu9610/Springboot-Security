@@ -8,6 +8,7 @@ package com.cos.securiy1.auth;
 
 // Security Session => Authentication => UserDetails(PrincipalDetails)
 
+import com.cos.securiy1.model.JwtUser;
 import com.cos.securiy1.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,11 +23,16 @@ import java.util.Map;
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private User user; // 컴포지션
+    private JwtUser jwtUser;
     private Map<String,Object> attributes;
 
     // 일반 로그인 생성자
     public PrincipalDetails(User user){
         this.user = user;
+    }
+
+    public PrincipalDetails(JwtUser jwtUser){
+        this.jwtUser = jwtUser;
     }
 
     // OAuth 로그인 생성자
@@ -43,26 +49,33 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     // 해당 User의 권한을 리턴하는곳.
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return user.getRole();
-            }
+//        Collection<GrantedAuthority> collect = new ArrayList<>();
+//        collect.add(new GrantedAuthority() {
+//            @Override
+//            public String getAuthority() {
+//                return user.getRole();
+//            }
+//        });
+//        return collect;
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        jwtUser.getRoleList().forEach(r->{
+            authorities.add(()->r);
         });
-        return collect;
+        return authorities;
     }
 
 
     // User 의 password 리턴
     @Override
     public String getPassword() {
-        return user.getPassword();
+        //return user.getPassword();
+        return jwtUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        //return user.getUsername();
+        return jwtUser.getUsername();
     }
 
     @Override

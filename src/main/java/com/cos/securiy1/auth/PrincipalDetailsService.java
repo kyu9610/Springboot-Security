@@ -1,6 +1,8 @@
 package com.cos.securiy1.auth;
 
+import com.cos.securiy1.model.JwtUser;
 import com.cos.securiy1.model.User;
+import com.cos.securiy1.repository.JwtUserRepository;
 import com.cos.securiy1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,11 +18,18 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtUserRepository jwtUserRepository;
 
     // 시큐리티 session(내부 Authentication(내부 UserDetails))
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User userEntity = userRepository.findByUsername(username);
+//        User userEntity = userRepository.findByUsername(username);
+//        if(userEntity != null){
+//            return new PrincipalDetails(userEntity);
+//        }
+//        return null;
+        JwtUser userEntity = jwtUserRepository.findByUsername(username);
         if(userEntity != null){
             return new PrincipalDetails(userEntity);
         }
