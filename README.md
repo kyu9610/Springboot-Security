@@ -1,5 +1,5 @@
 # Springboot-Security
-
+# JWT
 
 ## MySQL Workbench
 
@@ -34,8 +34,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/security?serverTimezone=Asia/Seoul
-    username: /*id*/
-    password: /*password*/
+    username: /* id */
+    password: /* password */
 
   mvc:
     view:
