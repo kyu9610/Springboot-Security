@@ -59,13 +59,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // HASH 암호방식으로 jwt토큰을 생성한다.
         String jwtToken = JWT.create()
                 .withSubject("cos토큰")
-                .withExpiresAt(new Date(System.currentTimeMillis() + (60000 * 10)))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                 .withClaim("id",principalDetails.getUser().getId()) // 비공개 claim (내가 넣고 싶은)
                 .withClaim("username",principalDetails.getUser().getUsername())
-                .sign(Algorithm.HMAC512("cos")); // 서버만 알고있는 secret key
+                .sign(Algorithm.HMAC512(JwtProperties.SECRET)); // 서버만 알고있는 secret key
 
 
-        response.addHeader("Authorization","Bearer " + jwtToken);
+        response.addHeader(JwtProperties.HEADER_STRING,JwtProperties.TOKEN_PREFIX + jwtToken);
         super.successfulAuthentication(request, response, chain, authResult);
     }
 }
