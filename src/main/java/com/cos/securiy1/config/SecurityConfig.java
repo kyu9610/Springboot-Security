@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private PrincipalOauth2UserService principalOauth2UserService;
 
-    private final CorsFilter corsFilter;
+    private final CorsConfig corsConfig;
 
     // 해당 메서드의 리턴되는 오브젝트를 IoC로 등록해준다.
     @Bean
@@ -36,11 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
+            //http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
+            http.addFilter(corsConfig.corsFilter());// @CrossOrigin(인증x), 시큐리티 필터에 등록을 해야 인증있을때 사용
             http.csrf().disable(); // 비활성화
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용x
             .and()
-                    .addFilter(corsFilter) // @CrossOrigin(인증x), 시큐리티 필터에 등록을 해야 인증있을때 사용
                     .formLogin().disable()
                     .httpBasic().disable() // ID + PWD 를 들고가는 방식인 httpBasic이 아닌 Token을 들고가는 Bearer 방식을 사용하기위해
                     .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AutenticationManger를 던져야함
