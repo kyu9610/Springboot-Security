@@ -3,7 +3,9 @@ package com.cos.securiy1.config;
 import com.cos.securiy1.filter.MyFilter1;
 import com.cos.securiy1.filter.MyFilter3;
 import com.cos.securiy1.jwt.JwtAuthenticationFilter;
+import com.cos.securiy1.jwt.JwtAuthorizationFilter;
 import com.cos.securiy1.oauth.PrincipalOauth2UserService;
+import com.cos.securiy1.repository.JwtUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private PrincipalOauth2UserService principalOauth2UserService;
 
     private final CorsConfig corsConfig;
+    private final JwtUserRepository jwtUserRepository;
 
     // 해당 메서드의 리턴되는 오브젝트를 IoC로 등록해준다.
     @Bean
@@ -44,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin().disable()
                     .httpBasic().disable() // ID + PWD 를 들고가는 방식인 httpBasic이 아닌 Token을 들고가는 Bearer 방식을 사용하기위해
                     .addFilter(new JwtAuthenticationFilter(authenticationManager())) // AutenticationManger를 던져야함
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager(),jwtUserRepository))
                     .authorizeRequests()
                     .antMatchers("/api/v1/user/**")
                     .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
